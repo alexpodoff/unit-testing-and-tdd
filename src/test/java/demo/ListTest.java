@@ -1,15 +1,20 @@
 package demo;
 
+import com.acme.banking.dbo.domain.Client;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ListTest {
     @Test //BDD
@@ -23,11 +28,34 @@ public class ListTest {
 
         //region Act | When
         sut.add(dummy);
+        //if (true) throw new RuntimeException("!!!");
         //endregion
 
         //region Assert | Then
         assertEquals(1, sut.size()); //assertFalse(sut.isEmpty());
         assertTrue(sut.contains(dummy)); //assertEquals(dummy, sut.get(0));
+
+        final IllegalArgumentException thrown = assertThrows(
+                IllegalArgumentException.class,
+                () -> new Client(-1, "dummy name"),
+                "id!"
+        );
+
         //endregion
+    }
+
+    @Test
+    public void shouldPass() {
+        System.getProperties().forEach((k,v) -> System.out.println(k + " : " + v));
+    }
+
+    @Test
+    public void shouldUseItemsStringRepresentationWhenToString() {
+        Object itemStub = mock(Object.class);
+        when(itemStub.toString()).thenReturn("str1");
+
+        final ArrayList<Object> sut = new ArrayList<>();
+        sut.add(itemStub);
+        assertThat(sut.toString()).contains("str1");
     }
 }
